@@ -140,13 +140,17 @@ class Parameter(object):
     True
     """
 
-    def __init__(self, seed):
+    def __init__(self, seed,
+            tuning_parameter = 0.1,
+            auto_optimize = True):
         self._seed = seed
         self._rng = random.Random()
         self._rng.seed(self._seed)
         self._value = self._rng.random()
         self._stored_value = self._value
-        self._scale_operator = ScaleOperator()
+        self._scale_operator = ScaleOperator(
+                scale = tuning_parameter,
+                auto_optimize = auto_optimize)
         self._samples = []
         self.summary = SampleSummarizer()
 
@@ -214,6 +218,8 @@ class Parameter(object):
                 self._scale_operator.number_of_proposals))
         s.write("{0}{1}acceptance rate = {2}\n".format(margin, indent,
                 self._scale_operator.get_acceptance_rate()))
+        s.write("{0}{1}tuning parameter = {2}\n".format(margin, indent,
+                self._scale_operator.scale))
         return s.getvalue()
 
 
@@ -222,17 +228,28 @@ class Model(object):
             number_of_up_parameters = 5,
             number_of_down_parameters = 2,
             power_addend = 0.0,
+            univariate_tuning_parameter = 0.1,
+            multivariate_tuning_parameter = 0.1,
+            auto_optimize = True,
             up_down_move_on = True):
         self._seed = seed
         self._rng = random.Random()
         self._rng.seed(self._seed)
         self.up_parameters = []
         for i in range(number_of_up_parameters):
-            self.up_parameters.append(Parameter(self.get_random_int()))
+            self.up_parameters.append(Parameter(
+                self.get_random_int(),
+                tuning_parameter = univariate_tuning_parameter,
+                auto_optimize = auto_optimize))
         self.down_parameters = []
         for i in range(number_of_down_parameters):
-            self.down_parameters.append(Parameter(self.get_random_int()))
+            self.down_parameters.append(Parameter(
+                self.get_random_int(),
+                tuning_parameter = univariate_tuning_parameter,
+                auto_optimize = auto_optimize))
         self._up_down_operator = UpDownScaleOperator(
+                scale = multivariate_tuning_parameter,
+                auto_optimize = auto_optimize,
                 power_addend = power_addend)
         self.up_down_move_on = up_down_move_on
 
@@ -314,6 +331,8 @@ class Model(object):
                 self._up_down_operator.number_of_proposals))
         s.write("{0}{1}acceptance rate = {2}\n".format(margin, indent,
                 self._up_down_operator.get_acceptance_rate()))
+        s.write("{0}{1}tuning parameter = {2}\n".format(margin, indent,
+                self._up_down_operator.scale))
         s.write("{0}up parameter summaries:\n".format(margin))
         for p in self.up_parameters:
             s.write("{0}".format(p.summarize(indent_level = 1)))
@@ -499,6 +518,19 @@ def main_cli(argv = sys.argv):
             type = arg_is_positive_int,
             default = 10,
             help = 'The number of MCMC samples to ignore.')
+    parser.add_argument('--univariate-tuning',
+            action = 'store',
+            type = arg_is_nonnegative_float,
+            default = 2.2,
+            help = 'Tuning parameter for univariate scaling moves.')
+    parser.add_argument('--multivariate-tuning',
+            action = 'store',
+            type = arg_is_nonnegative_float,
+            default = 0.21,
+            help = 'Tuning parameter for multivariate scaling move.')
+    parser.add_argument('--autotune',
+            action = 'store_true',
+            help = 'Auto optimize tuning parameters of MCMC moves.')
     parser.add_argument('-x', '--turn-up-down-move-off',
             action = 'store_true',
             help = 'Turn multivariate up/down move off.')
@@ -521,6 +553,9 @@ def main_cli(argv = sys.argv):
             number_of_up_parameters = args.number_of_up_parameters,
             number_of_down_parameters = args.number_of_down_parameters,
             power_addend = args.power_addend,
+            univariate_tuning_parameter = args.univariate_tuning,
+            multivariate_tuning_parameter = args.multivariate_tuning,
+            auto_optimize = args.autotune,
             up_down_move_on = (not args.turn_up_down_move_off))
 
     m.mcmc(number_of_generations = args.number_of_mcmc_generations,
