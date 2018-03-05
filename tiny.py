@@ -33,7 +33,7 @@ def multiply_move(num_up, num_down, state):
     _RNG.shuffle(PARAM_INDICES)
     up_ind, down_ind = PARAM_INDICES[:num_up], PARAM_INDICES[num_up: num_up + num_down]
     m = get_multiplier()
-    accept_prob = HR_HACK *(m ** (num_up - num_down))
+    accept_prob = m ** (num_up - num_down + HR_HACK)
     if _RNG.random() > accept_prob:
         return
     ns = list(state)
@@ -137,7 +137,7 @@ def main_cli(argv=sys.argv):
         args = parser.parse_args()
     else:
         args = parser.parse_args(argv)
-    HR_HACK = math.exp(args.power_addend)
+    HR_HACK = args.power_addend
     if not args.seed:
         args.seed = random.randint(1, 999999999)
     _LOG.debug('seed = {}'.format(args.seed))
