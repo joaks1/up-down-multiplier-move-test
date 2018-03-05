@@ -23,7 +23,7 @@ _NUM_MULT_TRIES = 0
 _NUM_MULT_SUCCESSES = 0
 HR_HACK = 0
 
-def get_multiplier(scale=0.5):
+def get_multiplier(scale=5):
     return math.exp(scale * (_RNG.random() - .5))
 
 
@@ -32,7 +32,10 @@ def multiply_move(num_up, num_down, state):
     _NUM_MULT_TRIES += 1
     _RNG.shuffle(PARAM_INDICES)
     up_ind, down_ind = PARAM_INDICES[:num_up], PARAM_INDICES[num_up: num_up + num_down]
+    #_LOG.debug('u = {} d = {}'.format(up_ind, down_ind))
+    #_LOG.debug('state = {}'.format(state))
     m = get_multiplier()
+    #_LOG.debug('m = {}'.format(m))
     accept_prob = m ** (num_up - num_down + HR_HACK)
     if _RNG.random() > accept_prob:
         return
@@ -41,12 +44,13 @@ def multiply_move(num_up, num_down, state):
         ns[i] *= m
         if ns[i] < 0.0 or ns[i] > 1.0:
             return
-    for i in up_ind:
+    for i in down_ind:
         ns[i] /= m
         if ns[i] < 0.0 or ns[i] > 1.0:
             return
     for i in range(len(state)):
         state[i] = ns[i]
+    #_LOG.debug('accepted ns = {}, state={}'.format(ns, state))
     _NUM_MULT_SUCCESSES += 1
 
 
@@ -169,7 +173,7 @@ def run_mcmc(nup, ndown, nsteps, num_multiplier_move_per_gen):
             sys.stderr.write('  {}% done...\n'.format(100 * i / nsteps))
         for j in range(num_multiplier_move_per_gen):
             multiply_move(nup, ndown, state)
-        for j in range(np):
+        for j in range(0*np):
             state[j] = slide_move(state[j])
         if i % sample_freq == 0:
             summarize_state(state, summary_lists)
