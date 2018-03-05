@@ -61,13 +61,15 @@ def slide_move(theta, window=0.2):
     return proposed
 
 
-def summarize_state(state, summary):
-    bin_index = int(state[0] / bin_cutoff)
-    assert 0 <= bin_index < num_summary_bins
-    summary[bin_index] += 1
+def summarize_state(state, summary_list):
+    for n, s in enumerate(state):
+        bin_index = int(s / bin_cutoff)
+        assert 0 <= bin_index < num_summary_bins
+        summary_list[n][bin_index] += 1
 
 
-def summarize_run(summary, exp):
+def summarize_run_one_param(summary, exp):
+
     cum_chi_sq = 0.0
     print('   Ind    Obs    Exp  Chi-squared   Cum.ChiSq')
     for ind, obs in enumerate(summary):
@@ -77,6 +79,10 @@ def summarize_run(summary, exp):
         print('{:>6} {:>6}  {:>6}    {:>7}    {:>7}'.format(1 + ind, obs, exp,
                                                             '{:.2f}'.format(chi_sq),
                                                             '{:.2f}'.format(cum_chi_sq)))
+def summarize_run(summary_lists, exp):
+    for n, sl in enumerate(summary_lists):
+        print('Param index {}'.format(n))
+        summarize_run_one_param(sl, exp)
     print('the critical value for chi-square with df=10 and alpha = 0.05 is 18.3')
     print('Accepting {}% of multiplier moves'.format(100.0 * _NUM_MULT_SUCCESSES / _NUM_MULT_TRIES))
 
@@ -155,7 +161,8 @@ def run_mcmc(nup, ndown, nsteps, num_multiplier_move_per_gen):
     assert nup > 0
     state = [_RNG.random() for i in range(np)]
     sample_freq = 10
-    summary = [0] * num_summary_bins
+    summary_el = [0] * num_summary_bins
+    summary_lists = [list(summary_el) for i in range(np)]
     PARAM_INDICES = range(np)
     for i in range(nsteps):
         if i > 0 and 10 * i % nsteps == 0:
@@ -165,9 +172,9 @@ def run_mcmc(nup, ndown, nsteps, num_multiplier_move_per_gen):
         for j in range(np):
             state[j] = slide_move(state[j])
         if i % sample_freq == 0:
-            summarize_state(state, summary)
+            summarize_state(state, summary_lists)
     expected_per_bin = nsteps / (sample_freq * num_summary_bins)
-    summarize_run(summary, expected_per_bin)
+    summarize_run(summary_lists, expected_per_bin)
 
 
 if __name__ == "__main__":
