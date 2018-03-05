@@ -158,9 +158,9 @@ def run_mcmc(nup, ndown, nsteps, num_multiplier_move_per_gen):
     m = ' nup={} ndown={} ngens={} n_mult_per_gen={} HR_HACK={}\n'
     sys.stderr.write(m.format(nup, ndown, nsteps, num_multiplier_move_per_gen, HR_HACK))
     np = nup + ndown
-    assert nup > 0
+    assert np > 0
     state = [_RNG.random() for i in range(np)]
-    sample_freq = 10
+    sample_freq = 100
     summary_el = [0] * num_summary_bins
     summary_lists = [list(summary_el) for i in range(np)]
     PARAM_INDICES = range(np)
