@@ -173,7 +173,7 @@ def run_mcmc(nup, ndown, nsteps, num_multiplier_move_per_gen):
             sys.stderr.write('  {}% done...\n'.format(100 * i / nsteps))
         for j in range(num_multiplier_move_per_gen):
             multiply_move(nup, ndown, state)
-        for j in range(0*np):
+        for j in range(np):
             state[j] = slide_move(state[j])
         if i % sample_freq == 0:
             summarize_state(state, summary_lists)
