@@ -1,0 +1,49 @@
+%% LyX 2.2.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+\usepackage{babel}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage[authoryear]{natbib}
+\usepackage[unicode=true]
+ {hyperref}
+
+
+\begin{document}
+David Bryant's example 1 (slightly different notation):
+\begin{eqnarray}
+  u & \sim & U[-a,a] \mbox{\hskip 5em rand. \#}   \\
+    x_i^{\prime} & = & x_i e ^{u} \mbox{\hskip 6.5em determinstic} \\
+    x_i & = & x_i^{\prime} e ^{u^{\prime}} \mbox{\hskip 6em eqn for reverse}  \\
+    u^{\prime} & =&  \ln[x_i] - \ln[x_i^{\prime}]  \mbox{\hskip 3em rephrase for $u^{\prime}$ on lhs}\\
+    & = & \ln[x_i] - \ln[x_i e ^{u}] \\
+    & = & \ln[x_i] - \ln[x_i] - u \\
+    & = & -u \\
+  g(u) = g\left(u^{\prime}\right) & = & \frac{1}{2a} \\
+  g\left(u^{\prime}\right) / g(u) & = & 1 \\
+  \frac{\partial x_i^{\prime}}{\partial x_i} & = & e^u \\
+  \frac{\partial x_i^{\prime}}{\partial x_j} & = & 0 \\
+  \frac{\partial x_i^{\prime}}{\partial u} & = & x_i e ^{u}\\
+  \frac{\partial u^{\prime}}{\partial x_{-}} & = & 0\\
+  \frac{\partial u^{\prime}}{\partial u} & = & -1\\
+  J & = & \left|\begin{array}{ccccc}
+    e^u & 0 & \ldots & 0 & x_1 e ^{u} \\
+    0 & e^u  & \ldots & 0 & x_2 e ^{u} \\
+    \vdots & \vdots & \ddots &  \vdots & \vdots \\
+    0 & 0 & \ldots & e^u  & x_n e ^{u} \\
+    0 & 0 & \ldots & 0 & -1
+  \end{array}\right|\\
+  \det(J) & = & -e^{nu} \\
+  |\det(J)| & = & e^{nu}
+\end{eqnarray}
+If you say that $m = e^u$, then the HR is $m^n$
+\end{document}
