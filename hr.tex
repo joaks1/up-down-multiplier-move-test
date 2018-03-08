@@ -112,4 +112,10 @@ So it doesn't matter if we think of this as drawing $u$ or drawing $m$, but we d
 If we change the move to draw $m\sim U[e^{-a}, e^a]$ then the probability densities $g$ change
 and the HR becomes $m^{n-2}$.
 
+So, if we draw the multiplier as $m = e^{\lambda(2u - 1)}$ (i.e., $u \sim U[-1,
+1]$ and $m = e^{\lambda u}$), the Hasting ratio is $m^n$.
+
+'RateMixer' draws $m \sim U[\lambda, 1/\lambda]$, which would make the
+Hastings ratio $m^{n-2}$, which is what it returns.
+
 \end{document}
