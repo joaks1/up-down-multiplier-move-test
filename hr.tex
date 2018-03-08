@@ -115,7 +115,63 @@ and the HR becomes $m^{n-2}$.
 So, if we draw the multiplier as $m = e^{\lambda(2u - 1)}$ (i.e., $u \sim U[-1,
 1]$ and $m = e^{\lambda u}$), the Hasting ratio is $m^n$.
 
-'RateMixer' draws $m \sim U[\lambda, 1/\lambda]$, which would make the
+`RateMixer' draws $m \sim U[\lambda, 1/\lambda]$, which would make the
 Hastings ratio $m^{n-2}$, which is what it returns.
+
+\section{Univariate special case}
+
+Drawing $m$ from an exponential of a uniform:
+
+\begin{eqnarray}
+  u & \sim & U[-a,a] \mbox{\hskip 5em rand. \#}   \\
+    x^{\prime} & = & x e ^{u} \mbox{\hskip 6.5em determinstic} \\
+    x & = & x^{\prime} e ^{u^{\prime}} \mbox{\hskip 6em eqn for reverse}  \\
+    u^{\prime} & = &  \ln[x] - \ln[x^{\prime}]  \mbox{\hskip 3em rephrase for $u^{\prime}$ on lhs}\\
+    & = & \ln[x] - \ln[x e ^{u}] \\
+    & = & \ln[x] - \ln[x] - u \\
+    & = & -u \\
+  g(u) = g\left(u^{\prime}\right) & = & \frac{1}{2a} \\
+  g\left(u^{\prime}\right) / g(u) & = & 1 \\
+  \frac{\partial x^{\prime}}{\partial x} & = & e^u \\
+  \frac{\partial x^{\prime}}{\partial u} & = & x e ^{u}\\
+  \frac{\partial u^{\prime}}{\partial u} & = & -1\\
+  J & = &  \left|\begin{array}{cc}
+    \frac{\partial x^{\prime}}{\partial x} & \frac{\partial x^{\prime}}{\partial u} \\
+    \frac{\partial u^{\prime}}{\partial x} & \frac{\partial u^{\prime}}{\partial u} \\
+  \end{array}\right|\\
+  J & = & \left|\begin{array}{ccccc}
+    e^u &  x e ^{u} \\
+    0  & -1
+  \end{array}\right|\\
+  \det(J) & = & -e^{u} \\
+  |\det(J)| & = & e^{u}
+\end{eqnarray}
+
+If you say that $m = e^u$, then the HR is $m$
+
+
+Drawing $m$ from a uniform:
+
+\begin{eqnarray}
+  u & \sim & U[-a,a] \mbox{\hskip 5em rand. \#}   \\
+    x^{\prime} & = & x u \mbox{\hskip 6.5em determinstic} \\
+    x & = & x^{\prime} u^{\prime} \mbox{\hskip 6em eqn for reverse}  \\
+    u^{\prime} & = & 1/u = u^{-1}\\
+  g(u) = g\left(u^{\prime}\right) & = & \frac{1}{2a} \\
+  g\left(u^{\prime}\right) / g(u) & = & 1 \\
+  \frac{\partial x^{\prime}}{\partial x} & = & u \\
+  \frac{\partial x^{\prime}}{\partial u} & = & x\\
+  \frac{\partial u^{\prime}}{\partial u} & = & -u^{-2}\\
+  J & = &  \left|\begin{array}{cc}
+    \frac{\partial x^{\prime}}{\partial x} & \frac{\partial x^{\prime}}{\partial u} \\
+    \frac{\partial u^{\prime}}{\partial x} & \frac{\partial u^{\prime}}{\partial u} \\
+  \end{array}\right|\\
+  J & = & \left|\begin{array}{ccccc}
+    u & x \\
+    0  & -u^{-2}
+  \end{array}\right|\\
+  \det(J) & = & u^1 \times -u^{-2} = -u^{-1} \\
+  |\det(J)| & = & u^{-1}
+\end{eqnarray}
 
 \end{document}
