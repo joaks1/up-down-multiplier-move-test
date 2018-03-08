@@ -46,4 +46,67 @@ David Bryant's example 1 (slightly different notation):
   |\det(J)| & = & e^{nu}
 \end{eqnarray}
 If you say that $m = e^u$, then the HR is $m^n$
+
+We could think of the same move in terms of drawing the multiplier:
+\begin{eqnarray}
+  u & \sim & U[-a,a] \mbox{\hskip 5em rand. \#}   \\
+  m & = & e ^{u}\\
+\end{eqnarray}
+and then:
+\begin{eqnarray}
+    x_i^{\prime} & = & x_i m \mbox{\hskip 6.5em determinstic} \\
+    x_i & = & x_i^{\prime} m^{\prime} \mbox{\hskip 6em eqn for reverse}  \\
+    m^{\prime} & =&  \frac{x_i}{x_i^{\prime}}  \mbox{\hskip 3em rephrase for $u^{\prime}$ on lhs}\\
+    & = & m^{-1} \\
+  \frac{\partial x_i^{\prime}}{\partial x_i} & = & m \\
+  \frac{\partial x_i^{\prime}}{\partial x_j} & = & 0 \\
+  \frac{\partial x_i^{\prime}}{\partial m} & = & x_i m\\
+  \frac{\partial m^{\prime}}{\partial x_{-}} & = & 0\\
+  \frac{\partial m^{\prime}}{\partial m} & = & -m^{-2}\\
+  J & = & \left|\begin{array}{ccccc}
+    m & 0 & \ldots & 0 & x_1 m \\
+    0 & m  & \ldots & 0 & x_2 m \\
+    \vdots & \vdots & \ddots &  \vdots & \vdots \\
+    0 & 0 & \ldots & m  & x_n m \\
+    0 & 0 & \ldots & 0 & -m^{-2}
+  \end{array}\right|\\
+  \det(J) & = & -m^{n-2} \\
+  |\det(J)| & = & m^{n-2}
+\end{eqnarray}
+So, it looks like we are headed to a different Hastings ratio for the same move (this time
+with a Jacobian of $m^{n-2}$ instead of $m^{n}$, but$\ldots$ 
+
+If we calculate the determinant in terms of the $m$ parameterization, then we need to have the 
+    probability density $g()$ in terms of $m$, too.
+$u$ is drawn from a uniform, but $m$ is not.
+
+We can see that (for the range $e^{-a}\leq m \leq e^a$), the CDF is:
+\begin{eqnarray}
+ F(m) & = & \frac{\ln[m] - \ln[e^{-a}]}{2a} \\
+ & = & \frac{\ln[m] + a}{2a}
+\end{eqnarray}
+by matching the probaility of $u$ (in the range $-a\leq u \leq u$) that is used to generate $m$""
+\begin{eqnarray}
+ F(u) & = & \frac{u + a}{2a}
+\end{eqnarray}
+
+To find the pdf of $m$ we differentiate $F(m)$ wrt $m$:
+\begin{eqnarray}
+ f(m) & = & \frac{d F(m)}{d m} \\
+   \frac{d F(m)}{d m} & =&  \frac{d (\ln[m] + a)/sa)}{dm} \\
+    &  = & \frac{d (\ln[m])/sa)}{dm} \\
+    & = & \frac{1}{2am} 
+\end{eqnarray}
+
+Thus
+\begin{eqnarray}
+  g\left(m^{\prime}\right) / g(m) & = & \left( \frac{1}{2am^{\prime}} \right) / \left( \frac{1}{2am} \right)\\
+  & = & \frac{2am}{2am^{\prime}}
+  & = & \frac{m}{m^{\prime}}
+  & = & m^2
+\end{eqnarray}
+Thus the Hastings ratio is: $m^2 m^{n-2} = m^n$, once again.
+
+So it doesn't matter if we think of this as drawing $u$ or drawing $m$, but we do have to be internally consistent.
+
 \end{document}
